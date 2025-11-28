@@ -1,0 +1,49 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:5000"
+    environment:
+      - FLASK_APP=app
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://dalu_user:dalu_pass@db:5432/dalu_db_dev
+      - JWT_SECRET_KEY=your-secret-key-change-in-production
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    command: >
+      bash -c "
+        for i in {1..30}; do
+          python -m flask run --host=0.0.0.0 && break || sleep 2
+        done
+      "
+    networks:
+      - dalu-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=dalu_user
+      - POSTGRES_PASSWORD=dalu_pass
+      - POSTGRES_DB=dalu_db_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dalu-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dalu_user -d dalu_db_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  postgres_data:
+
+networks:
+  dalu-network:
+    driver: bridge

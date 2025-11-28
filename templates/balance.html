@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 DALU - Balance</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * { font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: linear-gradient(135deg, #f0f4f7 0%, #e8f2f7 100%); 
+            min-height: 100vh; 
+        }
+        
+        /* 🎨 NAVBAR */
+        .navbar { 
+            background: linear-gradient(135deg, #4db8c6 0%, #1a9ca6 100%); 
+            padding: 1rem 2rem; 
+            box-shadow: 0 10px 25px rgba(77, 184, 198, 0.2); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+        }
+        
+        .navbar-container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-wrap: wrap; 
+            gap: 2rem; 
+        }
+        
+        .navbar-brand { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            color: white; 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            text-decoration: none; 
+        }
+        
+        .navbar-menu { 
+            display: flex; 
+            gap: 2rem; 
+            list-style: none; 
+            flex-wrap: wrap; 
+        }
+        
+        .navbar-menu a { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 500; 
+            padding: 0.5rem 1rem; 
+            border-radius: 8px; 
+            transition: all 0.3s ease; 
+        }
+        
+        .navbar-menu a:hover { 
+            background: rgba(255,255,255,0.2); 
+        }
+        
+        .navbar-menu a.active { 
+            background: rgba(255,255,255,0.3); 
+            font-weight: 700; 
+        }
+        
+        .logout-btn { 
+            background: rgba(255,255,255,0.2) !important; 
+            border: 2px solid white; 
+            color: white !important; 
+        }
+        
+        .logout-btn:hover { 
+            background: white !important; 
+            color: #1a9ca6 !important; 
+        }
+        
+        /* 📋 CONTAINER */
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 2rem; 
+        }
+        
+        .page-title { 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            background: linear-gradient(135deg, #4db8c6, #1a9ca6); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            margin-bottom: 2rem; 
+        }
+        
+        /* 📊 STATS GRID */
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 1.5rem; 
+            margin-bottom: 2rem; 
+        }
+        
+        .stat-card { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
+            border-left: 5px solid #4db8c6; 
+            transition: all 0.3s ease; 
+        }
+        
+        .stat-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12); 
+        }
+        
+        .stat-card.big { 
+            grid-column: 1 / -1; 
+            border-left-width: 8px; 
+            padding: 2.5rem; 
+            background: linear-gradient(135deg, rgba(77, 184, 198, 0.05) 0%, rgba(26, 156, 166, 0.05) 100%);
+        }
+        
+        .stat-card.negative { 
+            border-left-color: #ef4444; 
+        }
+        
+        .stat-card.positive { 
+            border-left-color: #28a745; 
+        }
+        
+        .stat-label { 
+            color: #666; 
+            font-size: 0.9rem; 
+            font-weight: 500; 
+            margin-bottom: 1rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+        
+        .stat-value { 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            color: #1a9ca6; 
+        }
+        
+        .stat-card.big .stat-value { 
+            font-size: 3.5rem; 
+        }
+        
+        .stat-card.negative .stat-value { 
+            color: #ef4444; 
+        }
+        
+        .stat-card.positive .stat-value { 
+            color: #28a745; 
+        }
+        
+        .stat-subtext { 
+            font-size: 0.85rem; 
+            color: #999; 
+            margin-top: 0.5rem; 
+        }
+        
+        /* 🔔 ALERTS */
+        .alert { 
+            padding: 1rem 1.5rem; 
+            border-radius: 10px; 
+            margin-bottom: 1.5rem; 
+            border-left: 5px solid; 
+            display: none; 
+            animation: slideDown 0.3s ease; 
+        }
+        
+        .alert.show { 
+            display: block; 
+        }
+        
+        .alert-success { 
+            background: #d4edda; 
+            color: #155724; 
+            border-color: #28a745; 
+        }
+        
+        .alert-error { 
+            background: #fff3cd; 
+            color: #856404; 
+            border-color: #ffc107; 
+        }
+        
+        @keyframes slideDown { 
+            from { 
+                opacity: 0; 
+                transform: translateY(-10px); 
+            } 
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            } 
+        }
+        
+        /* 📱 RESPONSIVE */
+        @media (max-width: 768px) {
+            .page-title { font-size: 1.8rem; }
+            .navbar-menu { gap: 1rem; }
+            .stat-card { padding: 1.5rem; }
+            .stat-value { font-size: 2rem; }
+            .stat-card.big .stat-value { font-size: 2.5rem; }
+            .stat-card.big { grid-column: 1 / -1; }
+        }
+    </style>
+</head>
+<body>
+    <script src="{{ url_for('static', filename='js/api-helper.js') }}"></script>
+    <script>checkAuth();</script>
+
+    <!-- 🎨 NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <span>📦</span>
+                <span>DALU</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="/inventario">📦 Inventario</a></li>
+                <li><a href="/ventas">💳 Ventas</a></li>
+                <li><a href="/gastos">💸 Gastos</a></li>
+                <li><a href="/deudas">📊 Deudas</a></li>
+                <li><a href="/balance" class="active">💰 Balance</a></li>
+                <li><a href="javascript:logout();" class="logout-btn">🚪 Cerrar Sesión</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 📋 MAIN CONTENT -->
+    <div class="container">
+        <h1 class="page-title">💰 Balance Financiero</h1>
+
+        <!-- 🔔 ALERTS -->
+        <div class="alert alert-success" id="successMsg"></div>
+        <div class="alert alert-error" id="errorMsg"></div>
+
+        <!-- 📊 STATS GRID -->
+        <div class="stats-grid">
+            
+            <!-- 💰 BALANCE NETO (GRANDE) -->
+            <div class="stat-card big" id="balanceCard">
+                <div class="stat-label">💰 Balance Neto</div>
+                <div class="stat-value" id="balanceNeto">$0.00</div>
+                <div class="stat-subtext" id="balanceState">Cargando...</div>
+            </div>
+            
+            <!-- 📈 INGRESOS -->
+            <div class="stat-card">
+                <div class="stat-label">📈 Ingresos Totales</div>
+                <div class="stat-value" id="totalIngresos">$0.00</div>
+                <div class="stat-subtext" id="cantVentas">0 ventas</div>
+            </div>
+            
+            <!-- 📉 EGRESOS -->
+            <div class="stat-card">
+                <div class="stat-label">📉 Egresos Totales</div>
+                <div class="stat-value" id="totalEgresos">$0.00</div>
+                <div class="stat-subtext" id="cantGastos">0 gastos</div>
+            </div>
+            
+            <!-- ⏳ DEUDAS PENDIENTES -->
+            <div class="stat-card">
+                <div class="stat-label">⏳ Deudas Pendientes</div>
+                <div class="stat-value" id="deudasPendientes">$0.00</div>
+                <div class="stat-subtext" id="cantDeudas">0 pendientes</div>
+            </div>
+            
+            <!-- 💵 FLUJO DISPONIBLE -->
+            <div class="stat-card">
+                <div class="stat-label">💵 Flujo Disponible</div>
+                <div class="stat-value" id="flujoDisponible">$0.00</div>
+                <div class="stat-subtext">Dinero real disponible</div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/balance.js') }}"></script>
+</body>
+</html>

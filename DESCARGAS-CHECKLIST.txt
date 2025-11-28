@@ -1,0 +1,114 @@
+📥 CHECKLIST DE DESCARGAS - DALU PRO V2
+
+Copiar estos archivos a: ~/Documents/Dalu_app/App_Inventario_Web_V2/
+
+─────────────────────────────────────────────────────────────────
+
+✅ CONFIGURACIÓN BASE (3 archivos)
+  ☐ config.py
+  ☐ .env.example
+  ☐ requirements.txt
+
+✅ APP FLASK CORE (2 archivos)
+  ☐ app/__init__.py
+  ☐ app/models.py
+
+✅ BLUEPRINT AUTENTICACIÓN (2 archivos)
+  ☐ app/auth/__init__.py
+  ☐ app/auth/routes.py
+
+✅ BLUEPRINT INVENTARIO (2 archivos)
+  ☐ app/inventario/__init__.py
+  ☐ app/inventario/routes.py
+
+✅ BLUEPRINT VENTAS (2 archivos)
+  ☐ app/ventas/__init__.py
+  ☐ app/ventas/routes.py
+
+✅ BLUEPRINT GASTOS (2 archivos)
+  ☐ app/gastos/__init__.py
+  ☐ app/gastos/routes.py
+
+✅ BLUEPRINT DEUDAS (2 archivos)
+  ☐ app/deudas/__init__.py
+  ☐ app/deudas/routes.py
+
+✅ BLUEPRINT BALANCE (2 archivos)
+  ☐ app/balance/__init__.py
+  ☐ app/balance/routes.py
+
+✅ DOCKER & PRODUCCIÓN (5 archivos)
+  ☐ Dockerfile
+  ☐ docker-compose.yml
+  ☐ .dockerignore
+  ☐ wsgi.py
+  ☐ init_db.py
+
+✅ DOCUMENTACIÓN (2 archivos)
+  ☐ README.md
+  ☐ INSTRUCCIONES-EJECUCION.md
+
+─────────────────────────────────────────────────────────────────
+
+TOTAL: 26 ARCHIVOS
+CARPETAS A CREAR:
+  • app/
+  • app/auth/
+  • app/inventario/
+  • app/ventas/
+  • app/gastos/
+  • app/deudas/
+  • app/balance/
+
+─────────────────────────────────────────────────────────────────
+
+ESTRUCTURA FINAL:
+App_Inventario_Web_V2/
+├── app/
+│   ├── __init__.py
+│   ├── models.py
+│   ├── auth/
+│   │   ├── __init__.py
+│   │   └── routes.py
+│   ├── inventario/
+│   │   ├── __init__.py
+│   │   └── routes.py
+│   ├── ventas/
+│   │   ├── __init__.py
+│   │   └── routes.py
+│   ├── gastos/
+│   │   ├── __init__.py
+│   │   └── routes.py
+│   ├── deudas/
+│   │   ├── __init__.py
+│   │   └── routes.py
+│   └── balance/
+│       ├── __init__.py
+│       └── routes.py
+├── config.py
+├── wsgi.py
+├── init_db.py
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── .env.example
+├── .dockerignore
+├── README.md
+└── INSTRUCCIONES-EJECUCION.md
+
+─────────────────────────────────────────────────────────────────
+
+PRÓXIMOS PASOS:
+1. Descargar todos los archivos ✅
+2. Crear carpetas app/ y subcarpetas ✅
+3. Copiar archivos en carpeta correcta ✅
+4. Renombrar .env.example a .env ✅
+5. docker-compose build ✅
+6. docker-compose up ✅
+7. docker-compose exec web python init_db.py ✅
+8. Abrir http://localhost:5000 ✅
+9. Login: admin / admin123 ✅
+
+─────────────────────────────────────────────────────────────────
+
+¡READY! 🚀
