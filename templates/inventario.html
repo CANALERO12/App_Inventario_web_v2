@@ -218,7 +218,7 @@
             background: white;
             border-radius: 16px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            overflow-x: auto;
+            overflow-x: visible;
             border: 1px solid rgba(77, 184, 198, 0.1);
         }
 
@@ -315,6 +315,42 @@
             color: #1a9ca6;
         }
 
+        .filter-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e0e5eb;
+        }
+
+        .filter-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #1a1a1a;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-controls select {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem;
+            border: 2px solid #e0e5eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #f9fbfc;
+        }
+
+        .inventory-count {
+            font-weight: 600;
+            color: #666;
+            white-space: nowrap;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -391,7 +427,33 @@
                         <label for="cantidad">📦 Cantidad</label>
                         <input type="number" id="cantidad" placeholder="0" required>
                     </div>
+                    <div class="form-group">
+                        <label for="categoria">📂 Categoría</label>
+                        <select id="categoria" required>
+                            <option value="">-- Selecciona categoría --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor">🏢 Proveedor</label>
+                        <input type="text" id="proveedor" placeholder="Nombre del proveedor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_compra">📅 Fecha de Compra</label>
+                        <input type="date" id="fecha_compra" required>
+                    </div>
                 </div>
+                
+                <!-- Filtro de categoría -->
+                <div class="filter-section">
+                    <label class="filter-label">🔍 Filtrar por Categoría:</label>
+                    <div class="filter-controls">
+                        <select id="filterCategory">
+                            <option value="todas">📂 Todas las Categorías</option>
+                        </select>
+                        <span class="inventory-count" id="inventoryCount">Mostrando: 0 productos</span>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn btn-primary" style="margin-top: 1.5rem;">
                     ✨ Agregar Producto
                 </button>
@@ -408,13 +470,16 @@
                         <th>💰 Costo</th>
                         <th>💵 Precio Venta</th>
                         <th>📦 Cantidad</th>
+                        <th>📂 Categoría</th>
+                        <th>🏢 Proveedor</th>
+                        <th>📅 Fecha Compra</th>
                         <th>📈 Ganancia</th>
                         <th>⚙️ Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="inventoryTableBody">
                     <tr>
-                        <td colspan="7" class="empty-state">
+                        <td colspan="10" class="empty-state">
                             <div class="empty-state-icon">📭</div>
                             <p>No hay productos en el inventario</p>
                         </td>

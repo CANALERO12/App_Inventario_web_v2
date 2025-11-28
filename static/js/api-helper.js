@@ -19,24 +19,22 @@ function isAuthenticated() {
  */
 function apiFetch(url, options = {}) {
     const token = getToken();
-    
     // Preparar headers
     const headers = {
         'Content-Type': 'application/json',
         ...options.headers
     };
-    
     // Agregar token si existe
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
-    
+
     // Combinar opciones
     const finalOptions = {
         ...options,
         headers
     };
-    
+
     return fetch(url, finalOptions)
         .then(response => {
             // Si retorna 401, token expiró
@@ -48,12 +46,14 @@ function apiFetch(url, options = {}) {
                 window.location.href = '/login';
                 return Promise.reject(new Error('Token expirado'));
             }
+
             return response.json();
         })
         .then(data => {
             if (data.success === false) {
                 throw new Error(data.message || 'Error en la API');
             }
+
             return data;
         });
 }
@@ -122,5 +122,35 @@ function checkAuth() {
     if (!isAuthenticated()) {
         console.warn('No autenticado, redirigiendo a login...');
         window.location.href = '/login';
+    }
+}
+
+/**
+ * FUNCIÓN FALTANTE: showAlert
+ * Mostrar alerta de éxito o error
+ */
+function showAlert(message, type = 'success') {
+    const successMsg = document.getElementById('successMsg');
+    const errorMsg = document.getElementById('errorMsg');
+    
+    if (type === 'success' && successMsg) {
+        successMsg.textContent = message;
+        successMsg.classList.add('show');
+        successMsg.style.display = 'block';
+        setTimeout(() => {
+            successMsg.classList.remove('show');
+            successMsg.style.display = 'none';
+        }, 3000);
+    } else if (type === 'error' && errorMsg) {
+        errorMsg.textContent = message;
+        errorMsg.classList.add('show');
+        errorMsg.style.display = 'block';
+        setTimeout(() => {
+            errorMsg.classList.remove('show');
+            errorMsg.style.display = 'none';
+        }, 5000);
+    } else {
+        // Fallback si no está el elemento
+        console.log(`[${type.toUpperCase()}] ${message}`);
     }
 }

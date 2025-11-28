@@ -5,8 +5,9 @@ Uso: python init_db.py
 """
 import os
 from app import create_app, db
-from app.models import Empresa, Usuario, Inventario, Venta, VentaItem, Gasto, Deuda
+from app.models import Empresa, Usuario, Inventario, Venta, VentaItem, Gasto, Deuda, Categoria
 from datetime import datetime, timedelta
+
 
 def init_database():
     """Inicializar BD con estructura y datos de prueba"""
@@ -39,6 +40,20 @@ def init_database():
         db.session.add(empresa)
         db.session.commit()
         print(f"✅ Empresa creada: {empresa.nombre}")
+        
+        # Crear categorías
+        print("\n📂 Creando categorías...")
+        categorias_data = ['Electrónica', 'Accesorios', 'Periféricos', 'Otro']
+        categorias = []
+        for cat_nombre in categorias_data:
+            categoria = Categoria(
+                nombre=cat_nombre,
+                empresa_id=empresa.id
+            )
+            db.session.add(categoria)
+            categorias.append(categoria)
+            print(f"  • {cat_nombre} ✅")
+        db.session.commit()
         
         # Crear usuarios de prueba
         print("\n👤 Creando usuarios de prueba...")
@@ -86,41 +101,56 @@ def init_database():
                 'nombre': 'Laptop Dell XPS 15',
                 'sku': 'LAPTOP-001',
                 'categoria': 'Electrónica',
+                'categoria_id': categorias[0].id,
                 'costo_unitario': 800.00,
                 'precio_venta': 1200.00,
                 'cantidad_disponible': 5,
+                'proveedor': 'Dell Inc.',
+                'fecha_compra': datetime.utcnow() - timedelta(days=30),
             },
             {
                 'nombre': 'Mouse inalámbrico',
                 'sku': 'MOUSE-001',
                 'categoria': 'Accesorios',
+                'categoria_id': categorias[1].id,
                 'costo_unitario': 15.00,
                 'precio_venta': 30.00,
                 'cantidad_disponible': 50,
+                'proveedor': 'Logitech',
+                'fecha_compra': datetime.utcnow() - timedelta(days=15),
             },
             {
                 'nombre': 'Teclado mecánico RGB',
                 'sku': 'KEYB-001',
                 'categoria': 'Accesorios',
+                'categoria_id': categorias[1].id,
                 'costo_unitario': 60.00,
                 'precio_venta': 120.00,
                 'cantidad_disponible': 20,
+                'proveedor': 'Corsair',
+                'fecha_compra': datetime.utcnow() - timedelta(days=20),
             },
             {
                 'nombre': 'Monitor 27" 4K',
                 'sku': 'MONITOR-001',
                 'categoria': 'Periféricos',
+                'categoria_id': categorias[2].id,
                 'costo_unitario': 300.00,
                 'precio_venta': 500.00,
                 'cantidad_disponible': 10,
+                'proveedor': 'LG',
+                'fecha_compra': datetime.utcnow() - timedelta(days=25),
             },
             {
                 'nombre': 'Audífonos Bose',
                 'sku': 'AUDIO-001',
                 'categoria': 'Accesorios',
+                'categoria_id': categorias[1].id,
                 'costo_unitario': 200.00,
                 'precio_venta': 350.00,
                 'cantidad_disponible': 15,
+                'proveedor': 'Bose Corporation',
+                'fecha_compra': datetime.utcnow() - timedelta(days=10),
             },
         ]
         
@@ -131,10 +161,13 @@ def init_database():
                 nombre=prod_data['nombre'],
                 sku=prod_data['sku'],
                 categoria=prod_data['categoria'],
+                categoria_id=prod_data['categoria_id'],
                 costo_unitario=prod_data['costo_unitario'],
                 precio_venta=prod_data['precio_venta'],
                 cantidad_disponible=prod_data['cantidad_disponible'],
                 cantidad_minima=3,
+                proveedor=prod_data['proveedor'],
+                fecha_compra=prod_data['fecha_compra'],
                 descripcion=f"Producto: {prod_data['nombre']}"
             )
             db.session.add(inventario)
@@ -209,6 +242,7 @@ def init_database():
         print("="*70)
         print("\n📊 RESUMEN:")
         print(f"   • Empresas: {Empresa.query.count()}")
+        print(f"   • Categorías: {Categoria.query.count()}")
         print(f"   • Usuarios: {Usuario.query.count()}")
         print(f"   • Productos: {Inventario.query.count()}")
         print(f"   • Ventas: {Venta.query.count()}")
@@ -221,6 +255,7 @@ def init_database():
         
         print("\n🌐 ACCEDE A: http://localhost:5000")
         print("="*70 + "\n")
+
 
 if __name__ == '__main__':
     init_database()

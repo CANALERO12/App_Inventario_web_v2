@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from sqlalchemy import func
 
+
 class Empresa(db.Model):
     """Modelo para empresas/negocios"""
     __tablename__ = 'empresa'
@@ -36,6 +37,7 @@ class Empresa(db.Model):
             'telefono': self.telefono,
             'email': self.email,
         }
+
 
 class Usuario(db.Model):
     """Modelo para usuarios del sistema"""
@@ -69,6 +71,7 @@ class Usuario(db.Model):
             'activo': self.activo,
         }
 
+
 class Inventario(db.Model):
     """Modelo para productos en inventario"""
     __tablename__ = 'inventario'
@@ -83,6 +86,12 @@ class Inventario(db.Model):
     precio_venta = db.Column(db.Float, nullable=False)
     cantidad_disponible = db.Column(db.Integer, default=0)
     cantidad_minima = db.Column(db.Integer, default=5)
+    
+    # ✨ NUEVOS CAMPOS:
+    categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'))
+    proveedor = db.Column(db.String(255))
+    fecha_compra = db.Column(db.DateTime)
+    
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -100,7 +109,11 @@ class Inventario(db.Model):
             'precio_venta': self.precio_venta,
             'cantidad_disponible': self.cantidad_disponible,
             'ganancia_unitaria': self.precio_venta - self.costo_unitario,
+            'categoria_id': self.categoria_id if hasattr(self, 'categoria_id') else None,
+            'proveedor': self.proveedor if hasattr(self, 'proveedor') else None,
+            'fecha_compra': self.fecha_compra.isoformat() if (hasattr(self, 'fecha_compra') and self.fecha_compra) else None,
         }
+
 
 class Venta(db.Model):
     """Modelo para ventas"""
@@ -138,6 +151,7 @@ class Venta(db.Model):
             'items': [item.to_dict() for item in self.items],
         }
 
+
 class VentaItem(db.Model):
     """Modelo para items individuales de una venta"""
     __tablename__ = 'venta_item'
@@ -157,6 +171,7 @@ class VentaItem(db.Model):
             'precio_unitario': self.precio_unitario,
             'subtotal': self.subtotal,
         }
+
 
 class Gasto(db.Model):
     """Modelo para gastos"""
@@ -185,6 +200,7 @@ class Gasto(db.Model):
             'fecha_gasto': self.fecha_gasto.isoformat(),
         }
 
+
 class Deuda(db.Model):
     """Modelo para deudas de clientes"""
     __tablename__ = 'deuda'
@@ -212,4 +228,19 @@ class Deuda(db.Model):
             'monto_pendiente': self.monto_pendiente,
             'estado': self.estado,
             'dias_vencimiento': (self.fecha_vencimiento - datetime.utcnow()).days if self.fecha_vencimiento else None,
+        }
+
+
+class Categoria(db.Model):
+    """Modelo para categorías de productos"""
+    __tablename__ = 'categoria'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    empresa_id = db.Column(db.Integer, db.ForeignKey('empresa.id'))
+    nombre = db.Column(db.String(100), nullable=False)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nombre': self.nombre
         }
